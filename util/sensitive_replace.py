@@ -1,7 +1,8 @@
 import click
-import dirUtil
 import json
 import os
+import dirUtil
+import sensitive_codec
 
 json_filename = 'sensitive-text.json'
 
@@ -22,14 +23,20 @@ def process_replace(file, data):
 
 @click.group()
 def app():
+    '''
+    入口
+    '''
     pass
 
 @app.command()
 @click.option("--dir", type=click.Path(),default="../../knowledgebao.github.io/_posts/3rd")
 def replace_root(dir):
-    data = {}
-    with open(json_filename) as f:
-        data = json.load(f)
+    '''
+    1. 替换指定目录 dir 下所有文件内容的关键字key
+    2. key对应的value是加密字段
+    3. 可以反向将value转换回key
+    '''
+    data = sensitive_codec.read_json()
     if len(data):
         files = dirUtil.list_all_files(dir)
         extern = ['.md','.py','.c','.c++','.go']
