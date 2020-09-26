@@ -87,7 +87,12 @@ def encode_json(json_filename,add,remove):
     '''
     pop_data = {}
     with open(json_filename, 'r') as f:
-        pop_data = json.load(f)
+        try:
+            pop_data = json.load(f)
+        except json.JSONDecodeError as err:
+            print("file is not json,can not encode.")
+            return
+
     if len(add):
         pop_data[add] = ''
     if len(remove) and remove in pop_data.keys():
